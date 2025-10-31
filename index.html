@@ -287,24 +287,34 @@
                     });
                 });
 
-                // Keyboard navigation
-                document.addEventListener('keydown', (e) => {
+                // Keyboard navigation - only when slider is in viewport and focused
+                this.keyboardHandler = (e) => {
+                    // Only respond to arrow keys when not in an input field
+                    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+                        return;
+                    }
+                    
                     if (e.key === 'ArrowLeft') {
                         this.prevSlide();
                     } else if (e.key === 'ArrowRight') {
                         this.nextSlide();
                     }
-                });
+                };
+                document.addEventListener('keydown', this.keyboardHandler);
 
                 // Touch/Swipe navigation
                 const wrapper = this.container.querySelector('.slider-wrapper');
                 
                 wrapper.addEventListener('touchstart', (e) => {
-                    this.touchStartX = e.touches[0].clientX;
+                    if (e.touches && e.touches.length > 0) {
+                        this.touchStartX = e.touches[0].clientX;
+                    }
                 }, { passive: true });
 
                 wrapper.addEventListener('touchmove', (e) => {
-                    this.touchEndX = e.touches[0].clientX;
+                    if (e.touches && e.touches.length > 0) {
+                        this.touchEndX = e.touches[0].clientX;
+                    }
                 }, { passive: true });
 
                 wrapper.addEventListener('touchend', () => {
