@@ -1,1 +1,8 @@
-
+{
+  "title": "Compliance & Policy Tracking",
+  "images": [
+    {"url":"assets/projects/Compliance 1.png","alt":"Compliance Roadmap"},
+    {"url":"assets/projects/Compliance 2.png","alt":"Jira Tracker"},
+    {"url":"assets/projects/Compliance 3.png","alt":"InfoSec and Compliance Policies"}
+  ]
+}
