@@ -1,0 +1,15 @@
+{
+  "title": "Custom Gallery",
+  "images": [
+    {
+      "url": "assets/image2.svg",
+      "alt": "Red themed slide",
+      "caption": "Custom data loaded via URL parameter"
+    },
+    {
+      "url": "assets/image4.svg",
+      "alt": "Orange themed slide",
+      "caption": "This demonstrates the ?data=widgets/custom.json feature"
+    }
+  ]
+}
