@@ -287,10 +287,12 @@
                     });
                 });
 
-                // Keyboard navigation - only when slider is in viewport and focused
+                // Keyboard navigation - avoids interference with form inputs
                 this.keyboardHandler = (e) => {
-                    // Only respond to arrow keys when not in an input field
-                    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+                    // Only respond to arrow keys when not in a form field or editable content
+                    const tag = e.target.tagName;
+                    const isEditable = e.target.isContentEditable;
+                    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || isEditable) {
                         return;
                     }
                     
@@ -380,8 +382,11 @@
             }
 
             goToSlide(index) {
-                this.currentIndex = index;
-                this.updateSlider();
+                // Validate index is within bounds
+                if (index >= 0 && index < this.data.images.length) {
+                    this.currentIndex = index;
+                    this.updateSlider();
+                }
             }
 
             updateSlider() {
