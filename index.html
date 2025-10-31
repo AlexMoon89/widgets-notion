@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Slider Widget</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .slider-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .slider-wrapper {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .slider-track {
+            display: flex;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .slider-slide {
+            min-width: 100%;
+            position: relative;
+        }
+
+        .slider-slide img {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: cover;
+            max-height: 600px;
+        }
+
+        .slider-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+            color: white;
+            padding: 20px;
+            font-size: 18px;
+            text-align: center;
+        }
+
+        /* Arrow Navigation */
+        .slider-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            font-size: 24px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slider-arrow:hover {
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        .slider-arrow:focus {
+            outline: 2px solid #4CAF50;
+            outline-offset: 2px;
+        }
+
+        .slider-arrow-prev {
+            left: 20px;
+        }
+
+        .slider-arrow-next {
+            right: 20px;
+        }
+
+        /* Dot Navigation */
+        .slider-dots {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 20px;
+            background: white;
+        }
+
+        .slider-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ddd;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .slider-dot:hover {
+            background: #999;
+        }
+
+        .slider-dot.active {
+            background: #4CAF50;
+            transform: scale(1.2);
+        }
+
+        .slider-dot:focus {
+            outline: 2px solid #4CAF50;
+            outline-offset: 2px;
+        }
+
+        /* Loading State */
+        .slider-loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 18px;
+            color: #666;
+        }
+
+        .slider-error {
+            text-align: center;
+            padding: 40px;
+            font-size: 18px;
+            color: #e74c3c;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .slider-arrow {
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+            }
+
+            .slider-arrow-prev {
+                left: 10px;
+            }
+
+            .slider-arrow-next {
+                right: 10px;
+            }
+
+            .slider-caption {
+                font-size: 14px;
+                padding: 15px;
+            }
+
+            .slider-dots {
+                padding: 15px;
+                gap: 8px;
+            }
+
+            .slider-dot {
+                width: 10px;
+                height: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            .slider-arrow {
+                width: 35px;
+                height: 35px;
+                font-size: 18px;
+            }
+
+            .slider-caption {
+                font-size: 12px;
+                padding: 10px;
+            }
+        }
+
+        /* Title */
+        .slider-title {
+            text-align: center;
+            padding: 20px;
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+            background: white;
+            border-bottom: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+    <div id="slider-root"></div>
+
+    <script>
+        class ImageSlider {
+            constructor(containerId, data) {
+                this.container = document.getElementById(containerId);
+                this.data = data;
+                this.currentIndex = 0;
+                this.touchStartX = 0;
+                this.touchEndX = 0;
+                this.init();
+            }
+
+            init() {
+                this.render();
+                this.attachEventListeners();
+            }
+
+            render() {
+                const { title, images } = this.data;
+                
+                const html = `
+                    <div class="slider-container">
+                        ${title ? `<div class="slider-title">${this.escapeHtml(title)}</div>` : ''}
+                        <div class="slider-wrapper">
+                            <button class="slider-arrow slider-arrow-prev" aria-label="Previous slide">
+                                &#8249;
+                            </button>
+                            <div class="slider-track">
+                                ${images.map((img, index) => `
+                                    <div class="slider-slide" data-index="${index}">
+                                        <img src="${this.escapeHtml(img.url)}" alt="${this.escapeHtml(img.alt || '')}" loading="lazy">
+                                        ${img.caption ? `<div class="slider-caption">${this.escapeHtml(img.caption)}</div>` : ''}
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <button class="slider-arrow slider-arrow-next" aria-label="Next slide">
+                                &#8250;
+                            </button>
+                        </div>
+                        <div class="slider-dots">
+                            ${images.map((_, index) => `
+                                <button class="slider-dot ${index === 0 ? 'active' : ''}" 
+                                        data-index="${index}" 
+                                        aria-label="Go to slide ${index + 1}">
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+
+                this.container.innerHTML = html;
+                this.sliderTrack = this.container.querySelector('.slider-track');
+                this.dots = this.container.querySelectorAll('.slider-dot');
+            }
+
+            escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+
+            attachEventListeners() {
+                // Arrow buttons
+                const prevBtn = this.container.querySelector('.slider-arrow-prev');
+                const nextBtn = this.container.querySelector('.slider-arrow-next');
+                
+                prevBtn.addEventListener('click', () => this.prevSlide());
+                nextBtn.addEventListener('click', () => this.nextSlide());
+
+                // Dot navigation
+                this.dots.forEach(dot => {
+                    dot.addEventListener('click', (e) => {
+                        const index = parseInt(e.target.dataset.index);
+                        this.goToSlide(index);
+                    });
+                });
+
+                // Keyboard navigation - avoids interference with form inputs
+                this.keyboardHandler = (e) => {
+                    // Only respond to arrow keys when not in a form field or editable content
+                    const tag = e.target.tagName;
+                    const isEditable = e.target.isContentEditable;
+                    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || isEditable) {
+                        return;
+                    }
+                    
+                    if (e.key === 'ArrowLeft') {
+                        this.prevSlide();
+                    } else if (e.key === 'ArrowRight') {
+                        this.nextSlide();
+                    }
+                };
+                document.addEventListener('keydown', this.keyboardHandler);
+
+                // Touch/Swipe navigation
+                const wrapper = this.container.querySelector('.slider-wrapper');
+                
+                wrapper.addEventListener('touchstart', (e) => {
+                    if (e.touches && e.touches.length > 0) {
+                        this.touchStartX = e.touches[0].clientX;
+                    }
+                }, { passive: true });
+
+                wrapper.addEventListener('touchmove', (e) => {
+                    if (e.touches && e.touches.length > 0) {
+                        this.touchEndX = e.touches[0].clientX;
+                    }
+                }, { passive: true });
+
+                wrapper.addEventListener('touchend', () => {
+                    this.handleSwipe();
+                });
+
+                // Mouse drag (optional enhancement)
+                let isDragging = false;
+                let startX = 0;
+                let endX = 0;
+
+                wrapper.addEventListener('mousedown', (e) => {
+                    isDragging = true;
+                    startX = e.clientX;
+                });
+
+                wrapper.addEventListener('mousemove', (e) => {
+                    if (isDragging) {
+                        endX = e.clientX;
+                    }
+                });
+
+                wrapper.addEventListener('mouseup', () => {
+                    if (isDragging) {
+                        const diff = startX - endX;
+                        if (Math.abs(diff) > 50) {
+                            if (diff > 0) {
+                                this.nextSlide();
+                            } else {
+                                this.prevSlide();
+                            }
+                        }
+                        isDragging = false;
+                    }
+                });
+
+                wrapper.addEventListener('mouseleave', () => {
+                    isDragging = false;
+                });
+            }
+
+            handleSwipe() {
+                const diff = this.touchStartX - this.touchEndX;
+                
+                // Minimum swipe distance to trigger navigation
+                if (Math.abs(diff) > 50) {
+                    if (diff > 0) {
+                        this.nextSlide();
+                    } else {
+                        this.prevSlide();
+                    }
+                }
+            }
+
+            prevSlide() {
+                this.currentIndex = (this.currentIndex - 1 + this.data.images.length) % this.data.images.length;
+                this.updateSlider();
+            }
+
+            nextSlide() {
+                this.currentIndex = (this.currentIndex + 1) % this.data.images.length;
+                this.updateSlider();
+            }
+
+            goToSlide(index) {
+                // Validate index is within bounds
+                if (index >= 0 && index < this.data.images.length) {
+                    this.currentIndex = index;
+                    this.updateSlider();
+                }
+            }
+
+            updateSlider() {
+                const offset = -this.currentIndex * 100;
+                this.sliderTrack.style.transform = `translateX(${offset}%)`;
+
+                // Update active dot
+                this.dots.forEach((dot, index) => {
+                    if (index === this.currentIndex) {
+                        dot.classList.add('active');
+                    } else {
+                        dot.classList.remove('active');
+                    }
+                });
+            }
+        }
+
+        // Initialize slider from URL parameter
+        async function initSlider() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const dataUrl = urlParams.get('data') || 'widgets/example.json';
+
+            const container = document.getElementById('slider-root');
+            
+            try {
+                container.innerHTML = '<div class="slider-loading">Loading slider...</div>';
+                
+                const response = await fetch(dataUrl);
+                
+                if (!response.ok) {
+                    throw new Error(`Failed to load data: ${response.status} ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                
+                if (!data.images || !Array.isArray(data.images) || data.images.length === 0) {
+                    throw new Error('Invalid data format: images array is required');
+                }
+                
+                new ImageSlider('slider-root', data);
+            } catch (error) {
+                console.error('Error loading slider:', error);
+                container.innerHTML = `
+                    <div class="slider-error">
+                        <h2>Error Loading Slider</h2>
+                        <p>${error.message}</p>
+                        <p>Data URL: ${dataUrl}</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Initialize on page load
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initSlider);
+        } else {
+            initSlider();
+        }
+    </script>
+</body>
+</html>
