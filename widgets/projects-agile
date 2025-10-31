@@ -1,0 +1,9 @@
+{
+  "title": "Compliance & Policy Tracking",
+  "images": [
+    {"url":"assets/projects/Agile 1.PNG","alt":"Agile Practices Documentation"},
+    {"url":"assets/projects/Agile 2.PNG","alt":"Team Retrospectives"},
+    {"url":"assets/projects/Agile 3.PNG","alt":"Feature Releases"},
+    {"url":"assets/projects/Agile 4.PNG","alt":"Jira Burndown Chart"}
+  ]
+}
