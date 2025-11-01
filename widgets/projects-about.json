@@ -1,14 +1,14 @@
 {
   "images": [
-    {"url":"assets/projects/About 1.PNG","alt":"About"},
-    {"url":"assets/projects/About 2.PNG","alt":"About"},
-    {"url":"assets/projects/About 3.PNG","alt":"About"},
-    {"url":"assets/projects/About 4.PNG","alt":"About"},
+    {"url":"assets/projects/About 1.png","alt":"About"},
+    {"url":"assets/projects/About 2.png","alt":"About"},
+    {"url":"assets/projects/About 3.png","alt":"About"},
+    {"url":"assets/projects/About 4.png","alt":"About"},
     {"url":"assets/projects/About 5.PNG","alt":"About"},
-    {"url":"assets/projects/About 6.PNG","alt":"About"},
-    {"url":"assets/projects/About 7.PNG","alt":"About"},
-    {"url":"assets/projects/About 8.PNG","alt":"About"},
-    {"url":"assets/projects/About 9.PNG","alt":"About"},
-    {"url":"assets/projects/About 10.PNG","alt":"About"}
+    {"url":"assets/projects/About 6.png","alt":"About"},
+    {"url":"assets/projects/About 7.png","alt":"About"},
+    {"url":"assets/projects/About 8.png","alt":"About"},
+    {"url":"assets/projects/About 9.png","alt":"About"},
+    {"url":"assets/projects/About 10.png","alt":"About"}
   ]
 }
