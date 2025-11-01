@@ -1,247 +1,230 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Image Slider Widget</title>
-  <style>
-    *{margin:0;padding:0;box-sizing:border-box}
-    body{
-      font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;
-      background:#f5f5f5; padding:20px;
-    }
-    .slider-container{
-      max-width:1000px; margin:0 auto; background:#fff; border-radius:8px;
-      box-shadow:0 4px 6px rgba(0,0,0,.1); overflow:hidden;
-    }
-    .slider-title{
-      text-align:center; padding:20px; font-size:24px; font-weight:600; color:#333;
-      background:#fff; border-bottom:1px solid #eee;
-    }
-    .slider-wrapper{
-      position:relative; width:100%; overflow:hidden;
-      touch-action: pan-y;   /* better swipe */
-    }
-    .slider-track{
-      display:flex; flex-wrap:nowrap;                 /* key: no wrap */
-      transition: transform .3s ease-in-out;
-      will-change: transform;
-    }
-    .slider-slide{
-      flex: 0 0 100%;                                  /* key: exact width */
-      position:relative;
-    }
-    .slider-slide img{
-      width:100%; height:auto; display:block; object-fit:cover; max-height:600px;
-    }
-    .slider-caption{
-      position:absolute; left:0; right:0; bottom:0;
-      background: linear-gradient(to top, rgba(0,0,0,.7), transparent);
-      color:#fff; padding:20px; font-size:18px; text-align:center;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Image Slider Widget</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;background:#f5f5f5;padding:20px}
+  .slider-container{max-width:1000px;margin:0 auto;background:#fff;border-radius:8px;box-shadow:0 4px 6px rgba(0,0,0,.1);overflow:hidden}
+  .slider-title{text-align:center;padding:20px;font-size:24px;font-weight:600;color:#333;background:#fff;border-bottom:1px solid #eee}
+  .slider-wrapper{position:relative;width:100%;overflow:hidden;touch-action:pan-y}
+  .slider-track{display:flex;flex-wrap:nowrap;transition:transform .3s ease-in-out;will-change:transform}
+  .slider-slide{flex:0 0 100%;position:relative}
+  .slider-slide img{width:100%;height:auto;display:block;object-fit:cover;max-height:600px}
+  .slider-caption{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(to top,rgba(0,0,0,.7),transparent);color:#fff;padding:20px;font-size:18px;text-align:center}
 
-    /* Arrows */
-    .slider-arrow{
-      position:absolute; top:50%; transform:translateY(-50%);
-      background:rgba(0,0,0,.5); color:#fff; border:none; font-size:24px;
-      width:50px; height:50px; border-radius:50%; cursor:pointer; z-index:10;
-      display:flex; align-items:center; justify-content:center;
-      transition: background .3s ease;
-    }
-    .slider-arrow:hover{ background:rgba(0,0,0,.8) }
-    .slider-arrow:focus{ outline:2px solid #4CAF50; outline-offset:2px }
-    .slider-arrow-prev{ left:20px }
-    .slider-arrow-next{ right:20px }
+  .slider-arrow{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.5);color:#fff;border:none;font-size:24px;width:50px;height:50px;border-radius:50%;cursor:pointer;z-index:10;display:flex;align-items:center;justify-content:center;transition:background .3s ease}
+  .slider-arrow:hover{background:rgba(0,0,0,.8)}
+  .slider-arrow:focus{outline:2px solid #4CAF50;outline-offset:2px}
+  .slider-arrow-prev{left:20px}
+  .slider-arrow-next{right:20px}
 
-    /* Dots */
-    .slider-dots{
-      display:flex; justify-content:center; gap:10px; padding:20px; background:#fff;
-    }
-    .slider-dot{
-      width:12px; height:12px; border-radius:50%; background:#ddd; border:none; cursor:pointer;
-      transition: all .3s ease;
-    }
-    .slider-dot:hover{ background:#999 }
-    .slider-dot.active{ background:#4CAF50; transform:scale(1.2) }
-    .slider-dot:focus{ outline:2px solid #4CAF50; outline-offset:2px }
+  .slider-dots{display:flex;justify-content:center;gap:10px;padding:20px;background:#fff}
+  .slider-dot{width:12px;height:12px;border-radius:50%;background:#ddd;border:none;cursor:pointer;transition:all .3s ease}
+  .slider-dot:hover{background:#999}
+  .slider-dot.active{background:#4CAF50;transform:scale(1.2)}
+  .slider-dot:focus{outline:2px solid #4CAF50;outline-offset:2px}
 
-    /* Responsive tweaks */
-    @media (max-width:768px){
-      .slider-arrow{ width:40px;height:40px;font-size:20px }
-      .slider-arrow-prev{ left:10px } .slider-arrow-next{ right:10px }
-      .slider-caption{ font-size:14px; padding:15px }
-      .slider-dots{ padding:15px; gap:8px }
-      .slider-dot{ width:10px;height:10px }
-    }
-    @media (max-width:480px){
-      body{ padding:10px }
-      .slider-arrow{ width:35px;height:35px;font-size:18px }
-      .slider-caption{ font-size:12px; padding:10px }
-    }
-  </style>
+  @media (max-width:768px){
+    .slider-arrow{width:40px;height:40px;font-size:20px}
+    .slider-arrow-prev{left:10px}.slider-arrow-next{right:10px}
+    .slider-caption{font-size:14px;padding:15px}
+    .slider-dots{padding:15px;gap:8px}
+    .slider-dot{width:10px;height:10px}
+  }
+  @media (max-width:480px){
+    body{padding:10px}
+    .slider-arrow{width:35px;height:35px;font-size:18px}
+    .slider-caption{font-size:12px;padding:10px}
+  }
+</style>
 </head>
 <body>
   <div id="slider-root"></div>
 
-  <script>
-    class ImageSlider {
-      constructor(containerId, data){
-        this.container = document.getElementById(containerId);
-        this.data = data;
-        this.currentIndex = 0;
-        this.touchStartX = 0;
-        this.touchEndX = 0;
-        this.init();
-      }
+<script>
+class ImageSlider{
+  constructor(containerId,data){
+    this.container=document.getElementById(containerId);
+    this.data=data;
+    this.currentIndex=0;
+    this.touchStartX=0; this.touchEndX=0;
+    this.slideWidth=0; // in px
+    this.init();
+  }
 
-      init(){
-        this.render();
-        this.cache();
-        this.attachEventListeners();
-        this.updateSlider();
-      }
+  init(){
+    this.render();
+    this.cache();
+    this.attachEventListeners();
+    this.computeSlideWidth();   // compute once DOM is in place
+    this.updateSlider(true);
 
-      render(){
-        const { title, images } = this.data;
-        const html = `
-          <div class="slider-container">
-            ${title ? `<div class="slider-title">${this.escapeHtml(title)}</div>` : ''}
-            <div class="slider-wrapper">
-              <button class="slider-arrow slider-arrow-prev" aria-label="Previous slide">&#8249;</button>
-              <div class="slider-track">
-                ${images.map((img, i)=>`
-                  <div class="slider-slide" data-index="${i}">
-                    <img src="${this.escapeHtml(img.url)}" alt="${this.escapeHtml(img.alt || '')}" loading="lazy" decoding="async">
-                    ${img.caption ? `<div class="slider-caption">${this.escapeHtml(img.caption)}</div>` : ''}
-                  </div>
-                `).join('')}
+    // Recompute after images load (layout can change heights, scrollbars, etc.)
+    const imgs=this.container.querySelectorAll('img');
+    let remaining=imgs.length;
+    if(remaining===0) return;
+    imgs.forEach(img=>{
+      if(img.complete){ if(--remaining===0) this.onAllImagesLoaded(); }
+      else{
+        img.addEventListener('load', ()=>{ if(--remaining===0) this.onAllImagesLoaded(); });
+        img.addEventListener('error', ()=>{ if(--remaining===0) this.onAllImagesLoaded(); });
+      }
+    });
+  }
+
+  onAllImagesLoaded(){
+    this.computeSlideWidth();
+    this.updateSlider(true);
+  }
+
+  render(){
+    const {title,images}=this.data;
+    const html=`
+      <div class="slider-container">
+        ${title?`<div class="slider-title">${this.escapeHtml(title)}</div>`:''}
+        <div class="slider-wrapper">
+          <button class="slider-arrow slider-arrow-prev" aria-label="Previous slide">&#8249;</button>
+          <div class="slider-track">
+            ${images.map((img,i)=>`
+              <div class="slider-slide" data-index="${i}">
+                <img src="${this.escapeHtml(img.url)}" alt="${this.escapeHtml(img.alt||'')}" loading="lazy" decoding="async">
+                ${img.caption?`<div class="slider-caption">${this.escapeHtml(img.caption)}</div>`:''}
               </div>
-              <button class="slider-arrow slider-arrow-next" aria-label="Next slide">&#8250;</button>
-            </div>
-            <div class="slider-dots">
-              ${images.map((_, i)=>`
-                <button class="slider-dot ${i===0?'active':''}" data-index="${i}" aria-label="Go to slide ${i+1}"></button>
-              `).join('')}
-            </div>
-          </div>`;
-        this.container.innerHTML = html;
-      }
+            `).join('')}
+          </div>
+          <button class="slider-arrow slider-arrow-next" aria-label="Next slide">&#8250;</button>
+        </div>
+        <div class="slider-dots">
+          ${images.map((_,i)=>`<button class="slider-dot ${i===0?'active':''}" data-index="${i}" aria-label="Go to slide ${i+1}"></button>`).join('')}
+        </div>
+      </div>`;
+    this.container.innerHTML=html;
+  }
 
-      cache(){
-        this.sliderTrack = this.container.querySelector('.slider-track');
-        this.wrapper = this.container.querySelector('.slider-wrapper');
-        this.prevBtn = this.container.querySelector('.slider-arrow-prev');
-        this.nextBtn = this.container.querySelector('.slider-arrow-next');
-        this.dots = this.container.querySelectorAll('.slider-dot');
-        this.count = this.data.images.length;
-      }
+  cache(){
+    this.sliderTrack=this.container.querySelector('.slider-track');
+    this.wrapper=this.container.querySelector('.slider-wrapper');
+    this.prevBtn=this.container.querySelector('.slider-arrow-prev');
+    this.nextBtn=this.container.querySelector('.slider-arrow-next');
+    this.dots=this.container.querySelectorAll('.slider-dot');
+    this.count=this.data.images.length;
+  }
 
-      escapeHtml(text){
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
-      }
+  escapeHtml(t){ const d=document.createElement('div'); d.textContent=t; return d.innerHTML; }
 
-      attachEventListeners(){
-        // arrows
-        this.prevBtn.addEventListener('click',()=> this.prevSlide());
-        this.nextBtn.addEventListener('click',()=> this.nextSlide());
+  attachEventListeners(){
+    // arrows
+    this.prevBtn.addEventListener('click',()=>this.prevSlide());
+    this.nextBtn.addEventListener('click',()=>this.nextSlide());
 
-        // dots
-        this.dots.forEach(d=>{
-          d.addEventListener('click', (e)=>{
-            const i = parseInt(e.currentTarget.dataset.index, 10);
-            this.goToSlide(i);
-          });
-        });
+    // dots
+    this.dots.forEach(d=>{
+      d.addEventListener('click',e=>{
+        const i=parseInt(e.currentTarget.dataset.index,10);
+        this.goToSlide(i);
+      });
+    });
 
-        // keyboard (ignore when typing in inputs)
-        this.keyboardHandler = (e)=>{
-          const tag = e.target.tagName;
-          if (tag==='INPUT' || tag==='TEXTAREA' || tag==='SELECT' || e.target.isContentEditable) return;
-          if (e.key==='ArrowLeft') this.prevSlide();
-          else if (e.key==='ArrowRight') this.nextSlide();
-        };
-        document.addEventListener('keydown', this.keyboardHandler);
+    // keyboard
+    this.keyboardHandler=(e)=>{
+      const tag=e.target.tagName;
+      if(tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT'||e.target.isContentEditable) return;
+      if(e.key==='ArrowLeft') this.prevSlide();
+      else if(e.key==='ArrowRight') this.nextSlide();
+    };
+    document.addEventListener('keydown',this.keyboardHandler);
 
-        // touch swipe
-        this.wrapper.addEventListener('touchstart', e=>{
-          if (e.touches?.length) this.touchStartX = e.touches[0].clientX;
-        }, {passive:true});
-        this.wrapper.addEventListener('touchmove', e=>{
-          if (e.touches?.length) this.touchEndX = e.touches[0].clientX;
-        }, {passive:true});
-        this.wrapper.addEventListener('touchend', ()=> this.handleSwipe());
+    // touch swipe
+    this.wrapper.addEventListener('touchstart',e=>{
+      if(e.touches?.length) this.touchStartX=e.touches[0].clientX;
+    },{passive:true});
+    this.wrapper.addEventListener('touchmove',e=>{
+      if(e.touches?.length) this.touchEndX=e.touches[0].clientX;
+    },{passive:true});
+    this.wrapper.addEventListener('touchend',()=>this.handleSwipe());
 
-        // mouse drag (simple)
-        let dragging=false, startX=0, endX=0;
-        this.wrapper.addEventListener('mousedown', e=>{ dragging=true; startX=endX=e.clientX; });
-        this.wrapper.addEventListener('mousemove', e=>{ if(dragging) endX=e.clientX; });
-        this.wrapper.addEventListener('mouseup', ()=>{
-          if(!dragging) return;
-          const diff = startX - endX;
-          if (Math.abs(diff)>50) (diff>0 ? this.nextSlide() : this.prevSlide());
-          dragging=false;
-        });
-        this.wrapper.addEventListener('mouseleave', ()=>{ dragging=false; });
+    // mouse drag
+    let dragging=false,startX=0,endX=0;
+    this.wrapper.addEventListener('mousedown',e=>{dragging=true;startX=endX=e.clientX;});
+    this.wrapper.addEventListener('mousemove',e=>{if(dragging) endX=e.clientX;});
+    this.wrapper.addEventListener('mouseup',()=>{
+      if(!dragging) return;
+      const diff=startX-endX;
+      if(Math.abs(diff)>50) (diff>0?this.nextSlide():this.prevSlide());
+      dragging=false;
+    });
+    this.wrapper.addEventListener('mouseleave',()=>{dragging=false;});
 
-        // keep position stable on resize (percent approach doesn’t *need* this, but harmless)
-        window.addEventListener('resize', ()=> this.updateSlider());
-      }
+    // recompute on resize (debounced)
+    let resizeTimer=null;
+    window.addEventListener('resize',()=>{
+      clearTimeout(resizeTimer);
+      resizeTimer=setTimeout(()=>{
+        this.computeSlideWidth();
+        this.updateSlider(true);
+      },100);
+    });
+  }
 
-      handleSwipe(){
-        const diff = this.touchStartX - this.touchEndX;
-        if (Math.abs(diff) > 50) (diff>0 ? this.nextSlide() : this.prevSlide());
-      }
+  computeSlideWidth(){
+    // width of one slide equals wrapper's content width
+    const w=this.wrapper.getBoundingClientRect().width;
+    this.slideWidth = Math.max(0, Math.round(w));
+  }
 
-      prevSlide(){
-        this.currentIndex = (this.currentIndex - 1 + this.count) % this.count;
-        this.updateSlider();
-      }
-      nextSlide(){
-        this.currentIndex = (this.currentIndex + 1) % this.count;
-        this.updateSlider();
-      }
-      goToSlide(i){
-        if (i>=0 && i<this.count){
-          this.currentIndex = i;
-          this.updateSlider();
-        }
-      }
+  handleSwipe(){
+    const diff=this.touchStartX - this.touchEndX;
+    if(Math.abs(diff)>50) (diff>0?this.nextSlide():this.prevSlide());
+  }
 
-      updateSlider(){
-        // Percent is relative to TRACK width (which is N × container), so move by 100/N per slide.
-        const pct = -(this.currentIndex * (100 / this.count));
-        this.sliderTrack.style.transform = `translate3d(${pct}%,0,0)`;
-        // update dots
-        this.dots.forEach((d,i)=> d.classList.toggle('active', i===this.currentIndex));
-      }
+  prevSlide(){ this.currentIndex=(this.currentIndex-1+this.count)%this.count; this.updateSlider(); }
+  nextSlide(){ this.currentIndex=(this.currentIndex+1)%this.count; this.updateSlider(); }
+  goToSlide(i){ if(i>=0 && i<this.count){ this.currentIndex=i; this.updateSlider(); } }
+
+  updateSlider(immediate=false){
+    const offsetPx=-(this.currentIndex * this.slideWidth);
+    if(immediate){
+      // jump without transition to avoid intermediate misalignment after width changes
+      const prev = this.sliderTrack.style.transition;
+      this.sliderTrack.style.transition='none';
+      this.sliderTrack.style.transform=`translate3d(${offsetPx}px,0,0)`;
+      // force reflow then restore transition
+      void this.sliderTrack.offsetWidth;
+      this.sliderTrack.style.transition=prev || 'transform .3s ease-in-out';
+    }else{
+      this.sliderTrack.style.transform=`translate3d(${offsetPx}px,0,0)`;
     }
+    this.dots.forEach((d,i)=>d.classList.toggle('active', i===this.currentIndex));
+  }
+}
 
-    async function initSlider(){
-      const params = new URLSearchParams(location.search);
-      const dataUrl = params.get('data') || 'widgets/example.json';
-      const root = document.getElementById('slider-root');
+// boot
+(async function init(){
+  const params=new URLSearchParams(location.search);
+  const dataUrl=params.get('data') || 'widgets/example.json';
+  const root=document.getElementById('slider-root');
 
-      try{
-        root.innerHTML = '<div class="slider-loading" style="text-align:center;padding:40px;color:#666">Loading slider...</div>';
-        const res = await fetch(dataUrl);
-        if (!res.ok) throw new Error(`Failed to load data: ${res.status} ${res.statusText}`);
-        const data = await res.json();
-        if (!data.images || !Array.isArray(data.images) || data.images.length===0)
-          throw new Error('Invalid data format: images array is required');
-        new ImageSlider('slider-root', data);
-      }catch(err){
-        console.error(err);
-        root.innerHTML = `
-          <div class="slider-error" style="text-align:center;padding:40px;color:#e74c3c">
-            <h2>Error Loading Slider</h2>
-            <p>${err.message}</p>
-            <p>Data URL: ${dataUrl}</p>
-          </div>`;
-      }
-    }
-    document.readyState==='loading' ? document.addEventListener('DOMContentLoaded', initSlider) : initSlider();
-  </script>
+  try{
+    root.innerHTML='<div style="text-align:center;padding:40px;color:#666">Loading slider...</div>';
+    const res=await fetch(dataUrl);
+    if(!res.ok) throw new Error(`Failed to load data: ${res.status} ${res.statusText}`);
+    const data=await res.json();
+    if(!data.images || !Array.isArray(data.images) || data.images.length===0)
+      throw new Error('Invalid data format: images array is required');
+    new ImageSlider('slider-root', data);
+  }catch(err){
+    console.error('Error loading slider:', err);
+    root.innerHTML=`
+      <div style="text-align:center;padding:40px;color:#e74c3c">
+        <h2>Error Loading Slider</h2>
+        <p>${err.message}</p>
+        <p>Data URL: ${dataUrl}</p>
+      </div>`;
+  }
+})();
+</script>
 </body>
 </html>
