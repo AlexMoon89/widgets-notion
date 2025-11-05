@@ -1,98 +1,115 @@
-# Notion Widgets (GitHub Pages)
+# 🧩 Notion Widgets (GitHub Pages)
 
-Self-hosted widgets you can embed in Notion using the **/Embed** block.  
-No third-party hosting, no external deps — just GitHub Pages.
-
-## Live catalog
-
-- **Catalog:** `https://alexmoon89.github.io/widgets-notion/`
-- **Slider demo:** `https://alexmoon89.github.io/widgets-notion/widgets/slider/?data=data/slider/example.json`
-
-> If a JSON change doesn’t appear in Notion, append `&v=YYYYMMDD` to bypass cache.
+Public, self-hosted widgets you can embed directly in **Notion** using the `/Embed` block.  
+No third-party hosting or external dependencies — everything runs from GitHub Pages.
 
 ---
 
-## Repository structure
+## 🌐 Live Catalog
 
+- **Catalog:**  
+  [https://alexmoon89.github.io/widgets-notion/](https://alexmoon89.github.io/widgets-notion/)
+- **Slider Demo:**  
+  [https://alexmoon89.github.io/widgets-notion/widgets/slider/?data=data/slider/example.json](https://alexmoon89.github.io/widgets-notion/widgets/slider/?data=data/slider/example.json)
+
+> If Notion caches an old version, add a cache-buster like `&v=20251105`.
+
+---
+
+## 📁 Repository Structure
+
+```text
 widgets-notion/
-├─ index.html # Catalog page (links to each widget)
+├─ index.html                  # Catalog page
 ├─ README.md
-├─ assets/ # Shared images/icons (optional)
+├─ assets/                     # Shared images/icons (optional)
 ├─ data/
-│ └─ slider/
-│ └─ example.json # Example data for the slider
+│  └─ slider/
+│     └─ example.json          # Example data for the slider widget
 └─ widgets/
-└─ slider/
-└─ index.html # Slider widget (embeddable page)
+   └─ slider/
+      └─ index.html            # Slider widget (embeddable)
+```
 
-yaml
-Copiar código
+## ⚙️ GitHub Pages Setup
 
-> **Note:** Folder is `widgets/` (with **d**). Keep this naming for future widgets.
-
----
-
-## Enable GitHub Pages
-
-1. Repo → **Settings → Pages**
-2. Source: **Deploy from branch**
-3. Branch: `main` (or the branch you use)
-4. Folder: `/ (root)`
-5. Save — you’ll get `https://<user>.github.io/widgets-notion/`
+1. Go to **Settings → Pages**
+2. Set **Source** → “Deploy from branch”
+3. Choose branch `main` and folder `/ (root)`
+4. Save — your site will publish to  
+   `https://alexmoon89.github.io/widgets-notion/`
 
 ---
 
-## Widget: Image Slider
+## 🖼️ Widget 1: Image Slider
 
-**URL pattern**
+A responsive slider with arrows, dots, keyboard and swipe navigation.  
+Loads its content from a JSON file provided via the `?data=` query parameter.
 
+### Embed URL Pattern
 /widgets/slider/?data=<path-to-json>
 
 bash
 Copiar código
 
-You can pass either:
-- **Repo-relative:** `data/slider/example.json`
-- **Root-relative:** `/widgets-notion/data/slider/example.json`
-- **Absolute URL:** `https://alexmoon89.github.io/widgets-notion/data/slider/example.json`
+#### Examples
+- Repo-relative:  
+  `/widgets/slider/?data=data/slider/example.json`
+- Root-relative:  
+  `/widgets/slider/?data=/widgets-notion/data/slider/example.json`
+- Full URL:  
+  `https://alexmoon89.github.io/widgets-notion/widgets/slider/?data=data/slider/example.json`
 
-**JSON schema**
+Add that URL into a Notion **/Embed** block.
+
+---
+
+### JSON Schema
 
 ```json
 {
   "title": "Projects (Agile)",
   "images": [
     { "url": "assets/product/1.png", "alt": "Hero", "caption": "" },
-    { "url": "assets/product/2.png", "alt": "Roadmap" }
+    { "url": "assets/product/2.png", "alt": "Roadmap" },
+    { "url": "assets/product/3.png", "alt": "Team" }
   ]
 }
-url: image path. Use repo-relative (assets/...) or root-relative (/widgets-notion/assets/...).
+```
 
-alt: accessibility text (recommended).
+#### Fields
 
-caption: optional.
+url – image path (repo-relative or root-relative)
 
-Example embed URL (Notion)
+alt – accessibility text (recommended)
 
-bash
-Copiar código
-https://alexmoon89.github.io/widgets-notion/widgets/slider/?data=data/slider/example.json
-Add it via /Embed in your Notion page.
+caption – optional text overlay
 
-Troubleshooting
-404 JSON: Check the path in ?data=. Try root-relative: /widgets-notion/data/slider/example.json
+## Troubleshooting
+Problem	Fix
+- 404 on JSON	Check ?data= path. Try root-relative: /widgets-notion/data/slider/example.json.
+- Images not showing	Verify the image URLs in your JSON exist under /assets/….
+- Weird layout / cropped slide	The slider re-measures on load and resize. Use Notion full-width or wide columns.
+- Cache not updating	Append &v=YYYYMMDD to the URL to force reload.
 
-Wrong images: Ensure the JSON url values exist and are reachable under GitHub Pages.
 
-Weird slide width in Notion: The slider re-measures on resize and after images load. If it still misbehaves, ensure your Notion block width isn’t too narrow; try full-width page or wide column.
+## 🚧 Roadmap
+Planned widgets (same lightweight architecture):
+```
+Widget	Description	Folder
+Timeline	Milestones from JSON (vertical / horizontal)	/widgets/timeline/
+Countdown	Timer to a target date/time	/widgets/countdown/
+Cards	Grid of icon + title + link cards	/widgets/cards/
+```
+## 🧭 Contributing
 
-Cache: Add &v=YYYYMMDD to the widget URL to force refresh.
+Fork the repo
 
-Roadmap
-widgets/timeline — milestones from JSON (vertical/horizontal)
+Create a new folder under /widgets/<name>/
 
-widgets/countdown — countdown to a target timestamp
+Add its demo JSON in /data/<name>/
 
-widgets/cards — icon + title + link cards grid
+Update index.html (catalog) and README links
 
-PRs and ideas welcome!
+
+© 2025 Alejandra Sofía Reyes — Made for Notion enthusiasts 🚀
