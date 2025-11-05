@@ -1,1 +1,30 @@
-
+{
+  "title": "Example Image Slider",
+  "images": [
+    {
+      "url": "assets/image1.svg",
+      "alt": "First slide - Blue background",
+      "caption": "Welcome to our image slider"
+    },
+    {
+      "url": "assets/image2.svg",
+      "alt": "Second slide - Red background",
+      "caption": "Fully responsive design"
+    },
+    {
+      "url": "assets/image3.svg",
+      "alt": "Third slide - Green background",
+      "caption": "Navigate with arrows or swipe"
+    },
+    {
+      "url": "assets/image4.svg",
+      "alt": "Fourth slide - Orange background",
+      "caption": "Keyboard navigation supported"
+    },
+    {
+      "url": "assets/image5.svg",
+      "alt": "Fifth slide - Purple background",
+      "caption": "Pure HTML, CSS, and JavaScript"
+    }
+  ]
+}
