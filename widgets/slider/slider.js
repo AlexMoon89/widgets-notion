@@ -10,7 +10,12 @@ function toAbsoluteRepoPath(path) {
   if (path.startsWith('/')) return path;       // root-relative (/widgets-notion/...)
   return projectBase() + path.replace(/^\.?\//, '');
 }
-
+function resolveAsset(path) {
+  if (!path) return path;
+  if (/^https?:\/\//i.test(path)) return path; // absolute
+  if (path.startsWith('/')) return path;       // already root-relative
+  return projectBase() + path.replace(/^\.?\//, ''); // repo-relative -> /widgets-notion/...
+}
 // ------- Slider -------
 class ImageSlider {
   constructor(containerId, data) {
@@ -58,7 +63,7 @@ class ImageSlider {
           <div class="slider-track">
             ${images.map((img, i) => `
               <div class="slider-slide" data-index="${i}">
-                <img src="${this.escapeHtml(img.url)}" alt="${this.escapeHtml(img.alt || '')}" loading="lazy" decoding="async">
+                <img src="${this.escapeHtml(resolveAsset(img.url))}" alt="${this.escapeHtml(img.alt || '')}" loading="lazy" decoding="async">
                 ${img.caption ? `<div class="slider-caption">${this.escapeHtml(img.caption)}</div>` : ''}
               </div>
             `).join('')}
