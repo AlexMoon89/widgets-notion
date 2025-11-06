@@ -1,4 +1,6 @@
-// ------- Path helpers (repo-aware) -------
+/* widgets/slider/slider.js */
+
+/* ---------------- Path helpers (repo-aware) ---------------- */
 function projectBase() {
   // e.g. /widgets-notion/widgets/slider/ -> base = /widgets-notion/
   const parts = location.pathname.split('/').filter(Boolean);
@@ -10,20 +12,20 @@ function normalizePath(p) {
 function toAbsoluteRepoPath(path) {
   path = normalizePath(path);
   if (!path) return null;
-  if (/^https?:\/\//i.test(path)) return path;       // absolute URL
-  if (path.startsWith('/')) return path;             // root-relative (/widgets-notion/...)
-  return projectBase() + path.replace(/^\.?\//, ''); // repo-relative -> /widgets-notion/...
+  if (/^https?:\/\//i.test(path)) return path;           // absolute URL
+  if (path.startsWith('/')) return path;                 // root-relative (/widgets-notion/...)
+  return projectBase() + path.replace(/^\.?\//, '');     // repo-relative -> /widgets-notion/...
 }
 function resolveAsset(path) {
   path = normalizePath(path);
   if (!path) return path;
-  if (/^https?:\/\//i.test(path)) return path;       // absolute
-  if (path.startsWith('/')) return path;             // already root-relative
-  // also accept "widgets-notion/..." without a leading slash
-  if (path.startsWith('widgets-notion/')) return '/' + path;
-  return projectBase() + path.replace(/^\.?\//, ''); // repo-relative -> /widgets-notion/...
+  if (/^https?:\/\//i.test(path)) return path;           // absolute
+  if (path.startsWith('/')) return path;                 // already root-relative
+  if (path.startsWith('widgets-notion/')) return '/' + path; // accept missing leading slash
+  return projectBase() + path.replace(/^\.?\//, '');     // repo-relative -> /widgets-notion/...
 }
-// ------- Slider -------
+
+/* ---------------- Slider ---------------- */
 class ImageSlider {
   constructor(containerId, data) {
     this.container = document.getElementById(containerId);
@@ -32,6 +34,7 @@ class ImageSlider {
     this.touchStartX = 0;
     this.touchEndX = 0;
     this.slideWidth = 0; // px
+    this.DEBUG = false;  // set true to log resolved URLs and show badges
     this.init();
   }
 
@@ -70,7 +73,9 @@ class ImageSlider {
           <div class="slider-track">
             ${images.map((img, i) => `
               <div class="slider-slide" data-index="${i}">
-                <img src="${this.escapeHtml(resolveAsset(img.url))}" alt="${this.escapeHtml(img.alt || '')}" loading="lazy" decoding="async">
+                <img src="${this.escapeHtml(resolveAsset(img.url))}"
+                     alt="${this.escapeHtml(img.alt || '')}"
+                     loading="lazy" decoding="async">
                 ${img.caption ? `<div class="slider-caption">${this.escapeHtml(img.caption)}</div>` : ''}
               </div>
             `).join('')}
@@ -84,16 +89,21 @@ class ImageSlider {
         </div>
       </div>`;
     this.container.innerHTML = html;
-    this.container.querySelectorAll('.slider-slide img').forEach(imgEl => {
-  console.log('[slider] img src ->', imgEl.src);
-  imgEl.addEventListener('error', () => {
-    console.error('[slider] failed to load', imgEl.src);
-    // small visible hint (optional)
-    const badge = document.createElement('div');
-    badge.textContent = 'Image not found';
-    badge.style.cssText = 'position:absolute;top:8px;left:8px;background:#900;color:#fff;padding:4px 6px;border-radius:6px;font:12px/1 sans-serif';
-    imgEl.closest('.slider-slide')?.appendChild(badge);
-  });
+
+    // --- Debug helpers (optional) ---
+    if (this.DEBUG) {
+      this.container.querySelectorAll('.slider-slide img').forEach(imgEl => {
+        console.log('[slider] img src ->', imgEl.src);
+        imgEl.addEventListener('error', () => {
+          console.error('[slider] failed to load', imgEl.src);
+          const badge = document.createElement('div');
+          badge.textContent = 'Image not found';
+          badge.style.cssText =
+            'position:absolute;top:8px;left:8px;background:#900;color:#fff;padding:4px 6px;border-radius:6px;font:12px/1 sans-serif';
+          imgEl.closest('.slider-slide')?.appendChild(badge);
+        });
+      });
+    }
   }
 
   cache() {
@@ -190,7 +200,7 @@ class ImageSlider {
   }
 }
 
-// ------- Boot -------
+/* ---------------- Boot ---------------- */
 (async function init() {
   const params = new URLSearchParams(location.search);
   const dataParam = params.get('data') || 'data/slider/example.json';
@@ -215,4 +225,3 @@ class ImageSlider {
       </div>`;
   }
 })();
-
