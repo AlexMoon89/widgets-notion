@@ -25,29 +25,9 @@
     .slider-dot.active{background:#4CAF50;transform:scale(1.2)}
     .slider-dot:focus{outline:2px solid #4CAF50;outline-offset:2px}
   </style>
-
-  <!-- Visible error/diagnostic overlay -->
-  <script>
-    (function(){
-      function show(msg){
-        const box=document.getElementById('diag')||document.body.appendChild(Object.assign(document.createElement('pre'),{
-          id:'diag',style:'white-space:pre-wrap;background:#fee;border:1px solid #faa;color:#900;padding:12px;margin:12px 0;border-radius:8px'
-        }));
-        box.textContent += (box.textContent?'\n':'') + msg;
-      }
-      window.addEventListener('error', e => show('JS error: ' + (e.message||e.type)));
-      window.addEventListener('unhandledrejection', e => show('Unhandled promise: ' + (e.reason && (e.reason.message||e.reason)) ));
-      window.__showDiag = show;
-    })();
-  </script>
 </head>
 <body>
   <div id="slider-root">Booting…</div>
-
-  <!-- Load the logic (cache-busted) -->
-  <script>
-    window.__showDiag('Loading slider.js…');
-  </script>
   <script src="./slider.js?v=20251105"></script>
 </body>
 </html>
