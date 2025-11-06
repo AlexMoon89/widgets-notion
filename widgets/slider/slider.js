@@ -84,13 +84,14 @@ class ImageSlider {
         </div>
         <div class="slider-dots">
           ${images.map((_, i) => `
-            <button class="slider-dot ${i === 0 ? 'active' : ''}" data-index="${i}" aria-label="Go to slide ${i + 1}"></button>
+            <button class="slider-dot ${i === 0 ? 'active' : ''}"
+                    data-index="${i}" aria-label="Go to slide ${i + 1}"></button>
           `).join('')}
         </div>
       </div>`;
     this.container.innerHTML = html;
 
-    // --- Debug helpers (optional) ---
+    // Optional debug overlay for broken images
     if (this.DEBUG) {
       this.container.querySelectorAll('.slider-slide img').forEach(imgEl => {
         console.log('[slider] img src ->', imgEl.src);
@@ -118,11 +119,9 @@ class ImageSlider {
   escapeHtml(t) { const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
 
   attachEventListeners() {
-    // arrows
     this.prevBtn.addEventListener('click', () => this.prevSlide());
     this.nextBtn.addEventListener('click', () => this.nextSlide());
 
-    // dots
     this.dots.forEach(d => {
       d.addEventListener('click', e => {
         const i = parseInt(e.currentTarget.dataset.index, 10);
@@ -202,26 +201,32 @@ class ImageSlider {
 
 /* ---------------- Boot ---------------- */
 (async function init() {
-  const params = new URLSearchParams(location.search);
-  const dataParam = params.get('data') || 'data/slider/example.json';
-  const dataUrl = toAbsoluteRepoPath(dataParam);
-  const root = document.getElementById('slider-root');
-
   try {
-    root.innerHTML = '<div style="text-align:center;padding:40px;color:#666">Loading slider...</div>';
+    window.__showDiag && window.__showDiag('Booting slider…');
+
+    const params = new URLSearchParams(location.search);
+    const dataParam = params.get('data') || 'data/slider/example.json';
+    const dataUrl = toAbsoluteRepoPath(dataParam);
+    const root = document.getElementById('slider-root');
+
+    window.__showDiag && window.__showDiag('Fetching: ' + dataUrl);
+
     const res = await fetch(dataUrl, { cache: 'no-store' });
     if (!res.ok) throw new Error(`Failed to load data: ${res.status} ${res.statusText}`);
     const data = await res.json();
     if (!data.images || !Array.isArray(data.images) || data.images.length === 0)
       throw new Error('Invalid data format: images array is required');
+
     new ImageSlider('slider-root', data);
+    window.__showDiag && window.__showDiag('Slider rendered ✔');
   } catch (err) {
     console.error('Error loading slider:', err);
+    const root = document.getElementById('slider-root');
     root.innerHTML = `
       <div style="text-align:center;padding:40px;color:#e74c3c">
         <h2>Error Loading Slider</h2>
         <p>${err.message}</p>
-        <p>Data URL: ${toAbsoluteRepoPath(dataParam)}</p>
       </div>`;
+    window.__showDiag && window.__showDiag('Failed: ' + (err && err.message));
   }
 })();
