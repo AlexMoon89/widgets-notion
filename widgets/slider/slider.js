@@ -4,16 +4,23 @@ function projectBase() {
   const parts = location.pathname.split('/').filter(Boolean);
   return '/' + (parts[0] || '') + '/';
 }
+function normalizePath(p) {
+  return (p ?? '').toString().trim();
+}
 function toAbsoluteRepoPath(path) {
+  path = normalizePath(path);
   if (!path) return null;
-  if (/^https?:\/\//i.test(path)) return path; // absolute URL
-  if (path.startsWith('/')) return path;       // root-relative (/widgets-notion/...)
-  return projectBase() + path.replace(/^\.?\//, '');
+  if (/^https?:\/\//i.test(path)) return path;       // absolute URL
+  if (path.startsWith('/')) return path;             // root-relative (/widgets-notion/...)
+  return projectBase() + path.replace(/^\.?\//, ''); // repo-relative -> /widgets-notion/...
 }
 function resolveAsset(path) {
+  path = normalizePath(path);
   if (!path) return path;
-  if (/^https?:\/\//i.test(path)) return path; // absolute
-  if (path.startsWith('/')) return path;       // already root-relative
+  if (/^https?:\/\//i.test(path)) return path;       // absolute
+  if (path.startsWith('/')) return path;             // already root-relative
+  // also accept "widgets-notion/..." without a leading slash
+  if (path.startsWith('widgets-notion/')) return '/' + path;
   return projectBase() + path.replace(/^\.?\//, ''); // repo-relative -> /widgets-notion/...
 }
 // ------- Slider -------
@@ -77,6 +84,16 @@ class ImageSlider {
         </div>
       </div>`;
     this.container.innerHTML = html;
+    this.container.querySelectorAll('.slider-slide img').forEach(imgEl => {
+  console.log('[slider] img src ->', imgEl.src);
+  imgEl.addEventListener('error', () => {
+    console.error('[slider] failed to load', imgEl.src);
+    // small visible hint (optional)
+    const badge = document.createElement('div');
+    badge.textContent = 'Image not found';
+    badge.style.cssText = 'position:absolute;top:8px;left:8px;background:#900;color:#fff;padding:4px 6px;border-radius:6px;font:12px/1 sans-serif';
+    imgEl.closest('.slider-slide')?.appendChild(badge);
+  });
   }
 
   cache() {
