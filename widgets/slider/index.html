@@ -4,144 +4,50 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Image Slider Widget</title>
-
-  <!-- ✨ Basic styling -->
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
-    body {
-      font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;
-      background:#f5f5f5;
-      padding:20px;
-    }
-
-    .slider-container {
-      max-width:1000px;
-      margin:0 auto;
-      background:#fff;
-      border-radius:8px;
-      box-shadow:0 4px 6px rgba(0,0,0,.1);
-      overflow:hidden;
-    }
-
-    .slider-title {
-      text-align:center;
-      padding:20px;
-      font-size:24px;
-      font-weight:600;
-      color:#333;
-      background:#fff;
-      border-bottom:1px solid #eee;
-    }
-
-    .slider-wrapper {
-      position:relative;
-      width:100%;
-      overflow:hidden;
-      touch-action:pan-y;
-    }
-
-    .slider-track {
-      display:flex;
-      flex-wrap:nowrap;
-      transition:transform .3s ease-in-out;
-      will-change:transform;
-    }
-
-    .slider-slide {
-      flex:0 0 100%;
-      position:relative;
-    }
-
-    .slider-slide img {
-      width:100%;
-      height:auto;
-      display:block;
-      object-fit:cover;
-      max-height:600px;
-    }
-
-    .slider-caption {
-      position:absolute;
-      left:0;
-      right:0;
-      bottom:0;
-      background:linear-gradient(to top,rgba(0,0,0,.7),transparent);
-      color:#fff;
-      padding:20px;
-      font-size:18px;
-      text-align:center;
-    }
-
-    /* ⬅️➡️ Arrows */
-    .slider-arrow {
-      position:absolute;
-      top:50%;
-      transform:translateY(-50%);
-      background:rgba(0,0,0,.5);
-      color:#fff;
-      border:none;
-      font-size:24px;
-      width:50px;
-      height:50px;
-      border-radius:50%;
-      cursor:pointer;
-      z-index:10;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      transition:background .3s ease;
-    }
-
-    .slider-arrow:hover { background:rgba(0,0,0,.8); }
-    .slider-arrow:focus { outline:2px solid #4CAF50; outline-offset:2px; }
-    .slider-arrow-prev { left:20px; }
-    .slider-arrow-next { right:20px; }
-
-    /* 🔘 Dots */
-    .slider-dots {
-      display:flex;
-      justify-content:center;
-      gap:10px;
-      padding:20px;
-      background:#fff;
-    }
-
-    .slider-dot {
-      width:12px;
-      height:12px;
-      border-radius:50%;
-      background:#ddd;
-      border:none;
-      cursor:pointer;
-      transition:all .3s ease;
-    }
-
-    .slider-dot:hover { background:#999; }
-    .slider-dot.active { background:#4CAF50; transform:scale(1.2); }
-    .slider-dot:focus { outline:2px solid #4CAF50; outline-offset:2px; }
-
-    /* 📱 Responsive tweaks */
-    @media (max-width:768px){
-      .slider-arrow{width:40px;height:40px;font-size:20px}
-      .slider-arrow-prev{left:10px}.slider-arrow-next{right:10px}
-      .slider-caption{font-size:14px;padding:15px}
-      .slider-dots{padding:15px;gap:8px}
-      .slider-dot{width:10px;height:10px}
-    }
-
-    @media (max-width:480px){
-      body{padding:10px}
-      .slider-arrow{width:35px;height:35px;font-size:18px}
-      .slider-caption{font-size:12px;padding:10px}
-    }
+    body { font-family:system-ui, -apple-system, Segoe UI, Roboto, sans-serif; background:#f5f5f5; padding:20px; }
+    .slider-container{max-width:1000px;margin:0 auto;background:#fff;border-radius:8px;box-shadow:0 4px 6px rgba(0,0,0,.1);overflow:hidden}
+    .slider-title{text-align:center;padding:20px;font-size:24px;font-weight:600;color:#333;background:#fff;border-bottom:1px solid #eee}
+    .slider-wrapper{position:relative;width:100%;overflow:hidden;touch-action:pan-y}
+    .slider-track{display:flex;flex-wrap:nowrap;transition:transform .3s ease-in-out;will-change:transform}
+    .slider-slide{flex:0 0 100%;position:relative}
+    .slider-slide img{width:100%;height:auto;display:block;object-fit:cover;max-height:600px}
+    .slider-caption{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(to top,rgba(0,0,0,.7),transparent);color:#fff;padding:20px;font-size:18px;text-align:center}
+    .slider-arrow{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.5);color:#fff;border:none;font-size:24px;width:50px;height:50px;border-radius:50%;cursor:pointer;z-index:10;display:flex;align-items:center;justify-content:center;transition:background .3s ease}
+    .slider-arrow:hover{background:rgba(0,0,0,.8)}
+    .slider-arrow:focus{outline:2px solid #4CAF50;outline-offset:2px}
+    .slider-arrow-prev{left:20px}
+    .slider-arrow-next{right:20px}
+    .slider-dots{display:flex;justify-content:center;gap:10px;padding:20px;background:#fff}
+    .slider-dot{width:12px;height:12px;border-radius:50%;background:#ddd;border:none;cursor:pointer;transition:all .3s ease}
+    .slider-dot:hover{background:#999}
+    .slider-dot.active{background:#4CAF50;transform:scale(1.2)}
+    .slider-dot:focus{outline:2px solid #4CAF50;outline-offset:2px}
   </style>
+
+  <!-- Visible error/diagnostic overlay -->
+  <script>
+    (function(){
+      function show(msg){
+        const box=document.getElementById('diag')||document.body.appendChild(Object.assign(document.createElement('pre'),{
+          id:'diag',style:'white-space:pre-wrap;background:#fee;border:1px solid #faa;color:#900;padding:12px;margin:12px 0;border-radius:8px'
+        }));
+        box.textContent += (box.textContent?'\n':'') + msg;
+      }
+      window.addEventListener('error', e => show('JS error: ' + (e.message||e.type)));
+      window.addEventListener('unhandledrejection', e => show('Unhandled promise: ' + (e.reason && (e.reason.message||e.reason)) ));
+      window.__showDiag = show;
+    })();
+  </script>
 </head>
-
 <body>
-  <!-- 🚀 The slider will render here -->
-  <div id="slider-root"></div>
+  <div id="slider-root">Booting…</div>
 
-  <!-- ✅ Load your slider logic -->
+  <!-- Load the logic (cache-busted) -->
+  <script>
+    window.__showDiag('Loading slider.js…');
+  </script>
   <script src="./slider.js?v=20251105"></script>
 </body>
 </html>
