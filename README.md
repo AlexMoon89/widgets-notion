@@ -92,6 +92,11 @@ Problem	Fix
 - Weird layout / cropped slide	The slider re-measures on load and resize. Use Notion full-width or wide columns.
 - Cache not updating	Append &v=YYYYMMDD to the URL to force reload.
 
+### 🧮 Widget 2: Page View 
+
+A lightweight, privacy-friendly page-view counter for Notion or static sites.  
+Works entirely client-side, auto-increments locally, and optionally syncs via visitorbadge.io.  
+➡️ [View widget](https://alexmoon89.github.io/widgets-notion/widgets/page-view/)
 
 ## 🚧 Roadmap
 Planned widgets (same lightweight architecture):
