@@ -7,45 +7,51 @@ body {
   position: relative;
   width: 100%;
   max-width: 700px;
+  aspect-ratio: 16 / 9; /* opcional pero recomendado */
   overflow: hidden;
 }
 
+/* Ambas imágenes SIEMPRE al mismo tamaño */
 .ba-img {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-  display: block;
+  height: 100%;
+  object-fit: cover;
 }
 
-/* IMAGEN BASE */
+/* Imagen base (Before) */
 .ba-before {
-  position: relative;
   z-index: 1;
 }
 
-/* CAPA SUPERPUESTA */
+/* Capa de recorte */
 .ba-overlay {
   position: absolute;
   top: 0;
   left: 0;
-  width: 50%;
+  width: 50%;            /* posición inicial */
   height: 100%;
   overflow: hidden;
   z-index: 2;
 }
 
+/* Imagen After (no se mueve nunca) */
 .ba-after {
   position: absolute;
   top: 0;
   left: 0;
 }
 
-/* HANDLE */
+/* Handle */
 .ba-handle {
   position: absolute;
   top: 0;
   left: 50%;
   width: 3px;
   height: 100%;
-  background: rgba(255,255,255,0.95);
+  background: rgba(255, 255, 255, 0.95);
   z-index: 3;
 }
 
@@ -60,5 +66,5 @@ body {
   padding: 6px 10px;
   border-radius: 20px;
   font-size: 14px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
