@@ -3,14 +3,13 @@ const params = new URLSearchParams(window.location.search);
 const img1 = params.get("img1");
 const img2 = params.get("img2");
 
-const before = document.getElementById("imgBefore");
-const after = document.getElementById("imgAfter");
+const base = document.getElementById("imgBefore");
 const overlay = document.getElementById("overlay");
 const handle = document.getElementById("handle");
 const container = document.getElementById("baContainer");
 
-before.src = img1;
-after.src = img2;
+base.src = img1;
+overlay.style.backgroundImage = `url(${img2})`;
 
 let dragging = false;
 
@@ -19,13 +18,8 @@ function updateSlider(clientX) {
   let x = clientX - rect.left;
   x = Math.max(0, Math.min(x, rect.width));
 
-  // Ajustes visuales
   overlay.style.width = `${x}px`;
   handle.style.left = `${x}px`;
-
-  // 🔑 Compensación correcta en PX
-  const shift = rect.width - x;
-  after.style.transform = `translateX(-${shift}px)`;
 }
 
 container.addEventListener("mousedown", e => {
