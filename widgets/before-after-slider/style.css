@@ -1,0 +1,56 @@
+body {
+  margin: 0;
+  background: transparent;
+}
+
+.ba-container {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  overflow: hidden;
+  cursor: ew-resize;
+}
+
+.ba-img {
+  width: 100%;
+  display: block;
+}
+
+.ba-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.ba-after {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.ba-handle {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 3px;
+  height: 100%;
+  background: rgba(255,255,255,0.9);
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.3);
+}
+
+.ba-handle::before {
+  content: "↔";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  color: #000;
+  font-size: 14px;
+  padding: 6px 8px;
+  border-radius: 20px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+}
