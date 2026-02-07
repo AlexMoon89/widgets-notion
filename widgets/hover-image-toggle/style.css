@@ -1,0 +1,44 @@
+:root {
+  --border-radius: 12px;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.widget-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hover-image {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  cursor: pointer;
+}
+
+.img {
+  width: 100%;
+  display: block;
+  border-radius: var(--border-radius);
+  transition: opacity 0.3s ease-in-out;
+}
+
+.img-hover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+}
+
+/* Desktop hover */
+@media (hover: hover) {
+  .hover-image:hover .img-hover {
+    opacity: 1;
+  }
+}
