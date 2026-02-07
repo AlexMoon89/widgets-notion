@@ -21,8 +21,13 @@ function updateSlider(clientX) {
 
   const percent = (x / rect.width) * 100;
 
-  overlay.style.width = percent + "%";
-  handle.style.left = percent + "%";
+  // ancho visible del after
+  overlay.style.width = `${percent}%`;
+  handle.style.left = `${percent}%`;
+
+  // 🔑 compensación visual:
+  // movemos la imagen after en sentido contrario
+  after.style.transform = `translateX(${(100 - percent)}%)`;
 }
 
 container.addEventListener("mousedown", e => {
