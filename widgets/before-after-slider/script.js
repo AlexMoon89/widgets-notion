@@ -13,22 +13,23 @@ overlay.style.backgroundImage = `url(${img2})`;
 
 let dragging = false;
 
-function updateSlider(clientX) {
+function update(x) {
   const rect = container.getBoundingClientRect();
-  let x = clientX - rect.left;
-  x = Math.max(0, Math.min(x, rect.width));
+  let pos = x - rect.left;
+  pos = Math.max(0, Math.min(pos, rect.width));
 
-  overlay.style.width = `${x}px`;
-  handle.style.left = `${x}px`;
+  overlay.style.width = `${pos}px`;
+  handle.style.left = `${pos}px`;
 }
 
+// Mouse
 container.addEventListener("mousedown", e => {
   dragging = true;
-  updateSlider(e.clientX);
+  update(e.clientX);
 });
 
 window.addEventListener("mousemove", e => {
-  if (dragging) updateSlider(e.clientX);
+  if (dragging) update(e.clientX);
 });
 
 window.addEventListener("mouseup", () => dragging = false);
@@ -36,11 +37,11 @@ window.addEventListener("mouseup", () => dragging = false);
 // Touch
 container.addEventListener("touchstart", e => {
   dragging = true;
-  updateSlider(e.touches[0].clientX);
+  update(e.touches[0].clientX);
 });
 
 window.addEventListener("touchmove", e => {
-  if (dragging) updateSlider(e.touches[0].clientX);
+  if (dragging) update(e.touches[0].clientX);
 });
 
 window.addEventListener("touchend", () => dragging = false);
