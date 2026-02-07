@@ -10,12 +10,13 @@ body {
   overflow: hidden;
 }
 
+/* Imagen base */
 .ba-base {
   width: 100%;
   display: block;
 }
 
-/* Overlay como background, no <img> */
+/* Overlay con background */
 .ba-overlay {
   position: absolute;
   top: 0;
@@ -23,7 +24,7 @@ body {
   height: 100%;
   width: 50%;
   background-size: cover;
-  background-position: center;
+  background-position: top left;
   pointer-events: none;
 }
 
@@ -34,8 +35,9 @@ body {
   left: 50%;
   width: 3px;
   height: 100%;
-  background: rgba(255,255,255,0.95);
+  background: rgba(255, 255, 255, 0.95);
   z-index: 10;
+  cursor: ew-resize;
 }
 
 .ba-handle::before {
