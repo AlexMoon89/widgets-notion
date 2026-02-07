@@ -9,17 +9,17 @@ const overlay = document.getElementById("overlay");
 const handle = document.getElementById("handle");
 const container = document.getElementById("baContainer");
 
-before.src = img1 || "";
-after.src = img2 || "";
+before.src = img1;
+after.src = img2;
 
 let dragging = false;
 
-function updateSlider(x) {
+function updateSlider(clientX) {
   const rect = container.getBoundingClientRect();
-  let pos = x - rect.left;
-  pos = Math.max(0, Math.min(pos, rect.width));
+  let x = clientX - rect.left;
+  x = Math.max(0, Math.min(x, rect.width));
 
-  const percent = (pos / rect.width) * 100;
+  const percent = (x / rect.width) * 100;
 
   overlay.style.width = percent + "%";
   handle.style.left = percent + "%";
@@ -34,11 +34,9 @@ window.addEventListener("mousemove", e => {
   if (dragging) updateSlider(e.clientX);
 });
 
-window.addEventListener("mouseup", () => {
-  dragging = false;
-});
+window.addEventListener("mouseup", () => dragging = false);
 
-// Touch support
+// Touch
 container.addEventListener("touchstart", e => {
   dragging = true;
   updateSlider(e.touches[0].clientX);
@@ -48,6 +46,4 @@ window.addEventListener("touchmove", e => {
   if (dragging) updateSlider(e.touches[0].clientX);
 });
 
-window.addEventListener("touchend", () => {
-  dragging = false;
-});
+window.addEventListener("touchend", () => dragging = false);
